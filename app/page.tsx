@@ -5,13 +5,11 @@ import gsap from "gsap";
 import { useCountdown } from "@/hooks/useCountDown";
 import FloatingElements from "@/components/FloatingElements";
 import CountdownSection from "@/components/CountDownSection";
-import Image from "next/image";
 
 
 export default function Home() {
   const { timeLeft, isBirthday } = useCountdown();
   const [showBirthday, setShowBirthday] = useState(false);
-  const [transitioning, setTransitioning] = useState(false);
 
   const countdownRef = useRef<HTMLDivElement>(null);
   const birthdayRef  = useRef<HTMLDivElement>(null);
@@ -25,40 +23,35 @@ export default function Home() {
     }
   }, [isBirthday]);
 
-  // When birthday flips mid-session: crossfade
+  // When birthday flips mid-session: crossfade out countdown, then show birthday view
   useEffect(() => {
     if (isBirthday && !prevBirthday.current && countdownRef.current && birthdayRef.current) {
       prevBirthday.current = true;
-      setTransitioning(true);
 
       gsap.to(countdownRef.current, {
         opacity: 0,
         y: -20,
         duration: 1.2,
         ease: "power3.in",
-        onComplete: () => {
-          setShowBirthday(true);
-          setTransitioning(false);
-        },
+        onComplete: () => setShowBirthday(true),
       });
     }
   }, [isBirthday]);
 
   return (
     <main
-      className="relative w-full h-screen overflow-hidden"
-      style={{ background: "var(--color-background)" }}
+      className="relative w-full overflow-hidden"
+      style={{ background: "var(--color-background)", minHeight: "100dvh" }}
     >
       {/* Vignette */}
       <div className="vignette" />
-
 
       {/* Ambient floating petals & butterflies */}
       <FloatingElements />
 
       {/* Countdown */}
       {!showBirthday && (
-        <div ref={countdownRef} style={{ opacity: transitioning ? 1 : 1 }}>
+        <div ref={countdownRef}>
           <CountdownSection timeLeft={timeLeft} />
         </div>
       )}

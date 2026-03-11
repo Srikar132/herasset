@@ -6,6 +6,7 @@ import { TextPlugin } from "gsap/TextPlugin";
 import Image from "next/image";
 import DigitUnit from "./DigitUnit";
 import { TimeLeft } from "@/hooks/useCountDown";
+import { useBgSound } from "@/hooks/useBgSound";
 
 gsap.registerPlugin(TextPlugin);
 
@@ -38,13 +39,69 @@ export default function CountdownSection({ timeLeft }: Props) {
   const cornerTRRef   = useRef<HTMLDivElement>(null);
   const cornerBLRef   = useRef<HTMLDivElement>(null);
   const gifRef        = useRef<HTMLDivElement>(null);
+  const gifImageRef   = useRef<HTMLImageElement>(null);
   const butterflyRef  = useRef<HTMLDivElement>(null);
+
+  // Background ambient sound — plays while this section is mounted,
+  // pauses automatically when the component unmounts (birthday crossfade).
+  const { play: playBg } = useBgSound({ src: "/countdown-bgsound.mp3", volume: 0.35, loop: true });
+
+  // Preload audio once — reuse the same instance on every click
+  const catAudioRef = useRef<HTMLAudioElement | null>(null);
+  useEffect(() => {
+    const audio = new Audio("/cat-sound.mp3");
+    audio.preload = "auto";
+    catAudioRef.current = audio;
+    return () => { audio.src = ""; };
+  }, []);
+
+  const handleGifClick = () => {
+    // — Sound —
+    const audio = catAudioRef.current;
+    if (audio) {
+      audio.currentTime = 0;   // allow rapid re-clicks
+      audio.play().catch(() => {
+        // Autoplay policy blocked — silently ignore
+      });
+    }
+
+    // — Haptic (mobile) —
+    navigator?.vibrate?.(120);
+
+    // — Bounce animation on the image element —
+    if (gifImageRef.current) {
+      gsap.fromTo(
+        gifImageRef.current,
+        { scale: 1 },
+        {
+          keyframes: [
+            { scale: 1.35, duration: 0.15, ease: "power2.out" },
+            { scale: 0.88, duration: 0.12, ease: "power2.in"  },
+            { scale: 1.18, duration: 0.1,  ease: "power2.out" },
+            { scale: 1,    duration: 0.15, ease: "back.out(3)" },
+          ],
+          overwrite: "auto",
+        }
+      );
+    }
+  };
 
   useEffect(() => {
     if (!containerRef.current) return;
 
     const ctx = gsap.context(() => {
-      const tl = gsap.timeline();
+      const tl = gsap.timeline({
+        // Reveal the container atomically the instant GSAP takes control —
+        // prevents the React-paint → useEffect delay flash (FOUC).
+        onStart: () => {
+          if (containerRef.current) {
+            containerRef.current.style.visibility = "visible";
+          }
+          // Start bg sound here — GSAP firing counts as a post-gesture
+          // context in all browsers, so autoplay policy is satisfied.
+          playBg();
+        },
+      });
 
       // — Main content sequence —
       tl.from(".cd-eyebrow", { scale: 0.7, opacity: 0, duration: 0.9, ease: "back.out(2)" })
@@ -91,7 +148,8 @@ export default function CountdownSection({ timeLeft }: Props) {
   return (
     <div
       ref={containerRef}
-      className="relative z-10 flex flex-col items-center justify-center h-screen w-full px-4 sm:px-6 text-center select-none"
+      className="relative z-10 flex flex-col items-center justify-center w-full px-4 sm:px-6 text-center select-none"
+      style={{ visibility: "hidden", minHeight: "100dvh" }}
     >
 
       <div ref={cornerTRRef} className="fixed top-0 right-0 pointer-events-none select-none" style={{ zIndex: 3, opacity: 0 }}>
@@ -119,10 +177,14 @@ export default function CountdownSection({ timeLeft }: Props) {
       {/* Gift — bottom right corner */}
       <div
         ref={gifRef}
-        className="absolute bottom-4 right-4 sm:bottom-6 sm:right-6 pointer-events-none"
+        className="absolute bottom-4 right-4 sm:bottom-6 sm:right-6 cursor-pointer"
         style={{ zIndex: 4, opacity: 0 }}
+        onClick={handleGifClick}
+        role="button"
+        aria-label="Play surprise"
       >
         <Image
+          ref={gifImageRef}
           src="/dudu-cute.gif"
           alt="gift"
           width={150}
@@ -150,7 +212,14 @@ export default function CountdownSection({ timeLeft }: Props) {
 
       {/* Eyebrow */}
       <p
-        className="cd-eyebrow font-sans text-xs tracking-widest uppercase mb-6 sm:mb-12 text-accent-dark font-light tracking-wide"
+        className="cd-eyebrow font-sans uppercase tracking-widest mb-6 sm:mb-10"
+        style={{
+          fontSize: "clamp(0.6rem, 2.2vw, 0.78rem)",
+          color: "var(--color-accent-dark)",
+          fontWeight: 300,
+          letterSpacing: "0.22em",
+          opacity: 0.85,
+        }}
       >
         something beautiful is coming
       </p>
@@ -158,8 +227,15 @@ export default function CountdownSection({ timeLeft }: Props) {
       {/* Main script title — typed in via TextPlugin */}
       <h1
         ref={titleRef}
-        className="cd-title font-script mb-2 text-5xl md:text-9xl text-foreground leading-tight"
-        style={{ opacity: 0, minHeight: "1.2em" }}
+        className="cd-title font-script text-foreground leading-tight"
+        style={{
+          opacity: 0,
+          minHeight: "1.2em",
+          marginBottom: "0.3em",
+          fontSize: "clamp(3.2rem, 14vw, 9rem)",
+          letterSpacing: "0.02em",
+          textShadow: "0 2px 18px rgba(92,74,58,0.13), 0 1px 0 rgba(92,74,58,0.08)",
+        }}
       >
         {/* intentionally empty — GSAP TextPlugin writes the text */}
       </h1>
@@ -168,7 +244,7 @@ export default function CountdownSection({ timeLeft }: Props) {
       <p
         className="cd-eyebrow font-serif mb-8 sm:mb-14"
         style={{
-          fontSize: "clamp(0.85rem, 2vw, 1.1rem)",
+          fontSize: "clamp(0.92rem, 3vw, 1.1rem)",
           fontStyle: "italic",
           fontWeight: 300,
           color: "var(--color-muted)",
