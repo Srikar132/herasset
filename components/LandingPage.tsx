@@ -56,6 +56,9 @@ export default function LandingPage() {
 
             {/* ── Floating audio button ── */}
             <AudioButton visible={visible} playing={playing} onToggle={toggle} />
+
+            {/* ── Butterfly cursor follower ── */}
+            
         </>
     );
 }

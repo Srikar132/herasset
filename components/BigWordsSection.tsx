@@ -76,7 +76,7 @@ export default function BigWordsSection() {
   return (
     <div
       ref={sectionRef}
-      className="relative w-full overflow-hidden p-5"
+      className="relative w-full overflow-hidden p-5 lg:p-10"
       style={{
         background: "var(--color-background)",
         paddingTop: "clamp(3rem, 8vw, 6rem)",

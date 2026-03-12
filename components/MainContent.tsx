@@ -18,12 +18,10 @@ const CONFETTI_COLORS = [
 
 /* ─── Butterfly scatter layout ───────────────────────────────────────────── */
 const BUTTERFLIES = [
-  { top: "6%",  left: "5%",  w: 120, rotate: "-rotate-12" },
-  { top: "4%",  left: "36%", w: 96,  rotate: "rotate-6"   },
-  // { top: "10%", left: "66%", w: 110, rotate: "-rotate-6"  },
-  // { top: "38%", left: "87%", w: 72,  rotate: "rotate-15"  },
-  { top: "70%", left: "20%", w: 120, rotate: "rotate-3"   },
-  { top: "66%", left: "70%", w: 120, rotate: "-rotate-6"  },
+  { top: "5%",  left: "3%",   w: 160, rotate: "-rotate-12", flutter: "0.9s" },
+  { top: "3%",  left: "34%",  w: 130, rotate: "rotate-6",   flutter: "1.1s" },
+  { top: "68%", left: "16%",  w: 160, rotate: "rotate-3",   flutter: "1.3s" },
+  { top: "63%", left: "68%",  w: 150, rotate: "-rotate-6",  flutter: "0.85s" },
 ];
 
 export default function MainContent() {
@@ -178,19 +176,26 @@ export default function MainContent() {
           style={{
             top: b.top,
             left: b.left,
-            width: b.w,
-            height: b.w,
+            /* clamp: mobile base → large screen max */
+            width:  `clamp(${b.w}px, ${b.w * 0.14}vw, ${Math.round(b.w * 1.65)}px)`,
+            height: `clamp(${b.w}px, ${b.w * 0.14}vw, ${Math.round(b.w * 1.65)}px)`,
             opacity: 0,
             zIndex: 2,
           }}
         >
-          <Image
-            src="/butterfly.webp"
-            alt=""
-            fill
-            className="object-contain drop-shadow"
-            sizes={`${b.w}px`}
-          />
+          {/* flutter CSS animation wraps the image so GSAP scale/opacity on parent don't conflict */}
+          <div
+            className="butterfly w-full h-full"
+            style={{ animationDuration: b.flutter, animationDelay: `${i * 0.2}s` }}
+          >
+            <Image
+              src="/butterfly.webp"
+              alt=""
+              fill
+              className="object-contain drop-shadow-md"
+              sizes={`(max-width: 768px) ${b.w}px, ${Math.round(b.w * 1.65)}px`}
+            />
+          </div>
         </div>
       ))}
 

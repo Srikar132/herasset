@@ -43,12 +43,12 @@ export const GALLERY: GalleryItem[] = [
   },
   {
     id: "mem-2",
-    src: "https://res.cloudinary.com/diyxlznar/image/upload/v1773303793/mahi-image-1_hnilgu.jpg",
+    src: "https://res.cloudinary.com/diyxlznar/image/upload/v1773303791/mahi-image-7_scrfol.jpg",
+    caption: "Side by side 🤍",
     type: "image",
-    caption: "The smile that started it all ✨",
     colSpan: 1,
     rowSpan: 2,
-    objectPosition: "top",
+    objectPosition: "center",
   },
 
   // ── (col 3 staggers under mem-2) ──
@@ -109,17 +109,19 @@ export const GALLERY: GalleryItem[] = [
     caption: "Laughter 💛",
     colSpan: 1,
     rowSpan: 2,
+    objectPosition: "top"
   },
 
   // ── (col 3 stagger) ──
   {
     id: "mem-13",
-    src: "https://res.cloudinary.com/diyxlznar/image/upload/v1773303791/mahi-image-7_scrfol.jpg",
+
     type: "image",
-    caption: "Side by side 🤍",
+    src: "https://res.cloudinary.com/diyxlznar/image/upload/v1773303793/mahi-image-1_hnilgu.jpg",
+    caption: "The smile that started it all ✨",
     colSpan: 1,
     rowSpan: 2,
-    objectPosition: "bottom",
+    objectPosition: "center",
   },
 
   // ── Row 4  [2 + 1] : big video + portrait ──
@@ -198,9 +200,10 @@ export const GALLERY: GalleryItem[] = [
   },
   {
     id: "mem-18",
-    src: "https://res.cloudinary.com/diyxlznar/image/upload/v1773303789/mahi-image-15_liyhb7.jpg",
+    src: "https://res.cloudinary.com/diyxlznar/image/upload/v1773303788/mahi-image-23_mvi5ak.jpg",
+    caption: "Holding on ❤️",
+
     type: "image",
-    caption: "Candid 📷",
     colSpan: 1,
     rowSpan: 2,
     objectPosition: "center",
@@ -221,9 +224,11 @@ export const GALLERY: GalleryItem[] = [
   // FIX 3: mem-26 moved before mem-20 — fills row-20 col-2 + row-22 col-1 holes
   {
     id: "mem-26",
-    src: "https://res.cloudinary.com/diyxlznar/image/upload/v1773303788/mahi-image-23_mvi5ak.jpg",
+    src: "https://res.cloudinary.com/diyxlznar/image/upload/v1773303789/mahi-image-15_liyhb7.jpg",
+
     type: "image",
-    caption: "Holding on ❤️",
+    caption: "Candid 📷",
+
     colSpan: 2,
     rowSpan: 2,
     objectPosition: "top",
@@ -278,7 +283,7 @@ export const GALLERY: GalleryItem[] = [
     caption: "Giggles 😄",
     colSpan: 1,
     rowSpan: 2,
-    objectPosition: "center",
+    objectPosition: "top",
   },
   {
     id: "mem-25",
