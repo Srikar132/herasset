@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { TextPlugin } from "gsap/TextPlugin";
 import Image from "next/image";
+import CornerDecor from "./CornerDecor";
 import DigitUnit from "./DigitUnit";
 import { TimeLeft } from "@/hooks/useCountDown";
 import { useBgSound } from "@/hooks/useBgSound";
@@ -148,31 +149,13 @@ export default function CountdownSection({ timeLeft }: Props) {
   return (
     <div
       ref={containerRef}
-      className="relative z-10 flex flex-col items-center justify-center w-full px-4 sm:px-6 text-center select-none"
-      style={{ visibility: "hidden", minHeight: "100dvh" }}
+      className="relative z-10 flex h-screen overflow-hidden flex-col items-center justify-center w-full px-4 sm:px-6 text-center select-none"
+      style={{ visibility: "hidden" }}
     >
 
-      <div ref={cornerTRRef} className="fixed top-0 right-0 pointer-events-none select-none" style={{ zIndex: 3, opacity: 0 }}>
-        <Image
-          src="/corner-top-right.png"
-          alt="Corner Decoration"
-          width={500}
-          height={500}
-          className="w-36 h-36 sm:w-52 sm:h-52 md:w-72 md:h-72 lg:w-96 lg:h-96 xl:w-125 xl:h-125"
-          priority
-        />
-      </div>
+      <CornerDecor ref={cornerTRRef} corner="top-right" initialOpacity={0} />
 
-      <div ref={cornerBLRef} className="fixed bottom-0 left-0 pointer-events-none select-none" style={{ zIndex: 3, opacity: 0 }}>
-        <Image
-          src="/corner-top-right.png"
-          alt="Corner Decoration"
-          width={500}
-          height={500}
-          className="w-36 h-36 sm:w-52 -rotate-180 sm:h-52 md:w-72 md:h-72 lg:w-96 lg:h-96 xl:w-125 xl:h-125"
-          priority
-        />
-      </div>
+      <CornerDecor ref={cornerBLRef} corner="bottom-left" initialOpacity={0} />
 
       {/* Gift — bottom right corner */}
       <div

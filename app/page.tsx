@@ -3,8 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { useCountdown } from "@/hooks/useCountDown";
-import FloatingElements from "@/components/FloatingElements";
 import CountdownSection from "@/components/CountDownSection";
+import LandingPage from "@/components/LandingPage";
 
 
 export default function Home() {
@@ -12,7 +12,7 @@ export default function Home() {
   const [showBirthday, setShowBirthday] = useState(false);
 
   const countdownRef = useRef<HTMLDivElement>(null);
-  const birthdayRef  = useRef<HTMLDivElement>(null);
+  const birthdayRef = useRef<HTMLDivElement>(null);
   const prevBirthday = useRef(false);
 
   // On mount: check immediately if it's already birthday
@@ -30,7 +30,7 @@ export default function Home() {
 
       gsap.to(countdownRef.current, {
         opacity: 0,
-        y: -20,
+        scale: 0.0,
         duration: 1.2,
         ease: "power3.in",
         onComplete: () => setShowBirthday(true),
@@ -40,14 +40,13 @@ export default function Home() {
 
   return (
     <main
-      className="relative w-full overflow-hidden"
-      style={{ background: "var(--color-background)", minHeight: "100dvh" }}
+      className="relative w-full bg-background"
     >
       {/* Vignette */}
-      <div className="vignette" />
+      {/* {!showBirthday && <div className="vignette" />} */}
 
       {/* Ambient floating petals & butterflies */}
-      <FloatingElements />
+      {/* <FloatingElements /> */}
 
       {/* Countdown */}
       {!showBirthday && (
@@ -59,7 +58,7 @@ export default function Home() {
       {/* Birthday */}
       {showBirthday && (
         <div ref={birthdayRef}>
-          {/* <WishingSection /> */}
+          <LandingPage />
         </div>
       )}
     </main>

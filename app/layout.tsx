@@ -1,6 +1,7 @@
-import type { Metadata, Viewport } from "next";
+import type { Metadata } from "next";
 import { Great_Vibes, Cormorant_Garamond, Jost } from "next/font/google";
 import "./globals.css";
+import SmoothScrollProvider from "@/components/SmoothScrollProvider";
 
 const greatVibes = Great_Vibes({
   variable: "--font-great-vibes",
@@ -48,7 +49,9 @@ export default function RootLayout({
       <body
         className={`${greatVibes.variable} ${cormorant.variable} ${jost.variable} antialiased`}
       >
-        {children}
+        {/* <SmoothScrollProvider> */}
+          {children}
+        {/* </SmoothScrollProvider> */}
       </body>
     </html>
   );
