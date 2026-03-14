@@ -5,7 +5,6 @@ import gsap from "gsap";
 import { useCountdown } from "@/hooks/useCountDown";
 import CountdownSection from "@/components/CountDownSection";
 import LandingPage from "@/components/LandingPage";
-import CursorFollower from "@/components/CursorFollower";
 
 
 export default function Home() {
@@ -64,7 +63,7 @@ export default function Home() {
       )}
 
 
-      <CursorFollower />
+      
     </main>
   );
 }
